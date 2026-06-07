@@ -1,27 +1,40 @@
 # MedBookStore Server
 
-এই রিপোজিটরিটা একটি NestJS ভিত্তিক সার্ভার অ্যাপের সোর্সকোড। নীচে ফোল্ডার ও গুরুত্বপূর্ণ ফাইলগুলোর ব্যবস্থা এবং দ্রুত রান/টেস্ট করার নির্দেশ দেওয়া হলো।
+এই রিপোজিটরিটা একটি NestJS ভিত্তিক সার্ভার অ্যাপের সোর্সকোড। নীচে পুরো ফোল্ডার স্ট্রাকচারটি দেখানো হলো (জন্যোকারী ফাইলসমূহ উল্লেখ করা আছে)।
 
-## প্রজেক্ট সংক্ষিপ্ত বিবরণ
-- **প্রকল্প**: MedBookStore (Backend API)
-- **ফ্রেমওয়ার্ক**: NestJS (TypeScript)
+## পুরো ফোল্ডার স্ট্রাকচার
 
-## ফোল্ডার ও ফাইল স্ট্রাকচার
-- [src](src): প্রধান সোর্সকোড
-  - [src/main.ts](src/main.ts) — অ্যাপ্লিকেশন স্টার্টপয়েন্ট
-  - [src/app.module.ts](src/app.module.ts) — রুট মডিউল
-  - [src/app.controller.ts](src/app.controller.ts) — নমুনা HTTP কন্ট্রোলার
-  - [src/app.service.ts](src/app.service.ts) — সার্ভিস লজিক
-  - [src/app.controller.spec.ts](src/app.controller.spec.ts) — ইউনিট টেস্ট (উদাহরণ)
-- [test](test): ইন্ড-টু-ইন্ড (e2e) টেস্ট
-  - [test/app.e2e-spec.ts](test/app.e2e-spec.ts)
-  - [test/jest-e2e.json](test/jest-e2e.json)
-- কনফিগ ফাইলসমূহ
-  - [package.json](package.json) — স্ক্রিপ্ট ও ডিপেনডেন্সি
-  - [tsconfig.json](tsconfig.json) — TypeScript কনফিগারেশন
-  - [tsconfig.build.json](tsconfig.build.json) — বিল্ড কনফিগ
-  - [nest-cli.json](nest-cli.json) — Nest CLI কনফিগ
-  - [eslint.config.mjs](eslint.config.mjs) — ESLint কনফিগ
+- .env
+- .git/
+- .gitignore
+- .prettierrc
+- README.md
+- dist/
+- eslint.config.mjs
+- nest-cli.json
+- node_modules/
+- package-lock.json
+- package.json
+- src/
+- test/
+- tsconfig.build.json
+- tsconfig.json
+
+## `src` এর ভিতর
+
+- src/main.ts — অ্যাপ্লিকেশন স্টার্টপয়েন্ট
+- src/app.module.ts — রুট মডিউল
+- src/app.controller.ts — নমুনা HTTP কন্ট্রোলার
+- src/app.controller.spec.ts — ইউনিট টেস্ট (উদাহরণ)
+- src/app.service.ts — সার্ভিস লজিক
+- src/config/
+  - src/config/db.config.ts
+- src/modules/  (বর্তমানে খালি)
+
+## `test` ফোল্ডার
+
+- test/app.e2e-spec.ts
+- test/jest-e2e.json
 
 ## দ্রুত শুরু (Development)
 1. নির্ভরতা ইনস্টল করুন:
@@ -30,7 +43,7 @@
 npm install
 ```
 
-2. উন্নয়ন সার্ভার চালান (ন্যূনতম সাধারণ কমান্ড — আপনার `package.json` অনুযায়ী ভিন্ন হতে পারে):
+2. উন্নয়ন সার্ভার চালান (আপনার `package.json`-এ থাকা স্ক্রিপ্ট অনুযায়ী):
 
 ```
 npm run start:dev
@@ -49,13 +62,12 @@ npm run test:e2e
 ```
 
 ## নোটস
-- যদি `package.json`-এ ভিন্ন স্ক্রিপ্ট থাকে, সেক্ষেত্রে সেই স্ক্রিপ্ট ব্যবহার করুন।
-- চোৱা লাগিলে আমি `package.json` চেক করে README আপডেট করে সঠিক স্ক্রিপ্ট নাম যোগ করে দিব।
+- `node_modules` ও `dist` জেনারেটেড ফোল্ডার — সাধারণত রিপোজিটরিতে যোগ করা হয় না।
+- যদি `package.json`-এ ভিন্ন স্ক্রিপ্ট নাম থাকে, আমি সেটা দেখে README আপডেট করে দেব।
 
 ## সাহায্য চাইলে
 - বললেই আমি লোকালভাবে টেস্ট চালিয়ে ফলাফল দেখাবো বা `README.md`-এ আরও বিস্তারিত যোগ করব।
 
-<p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
