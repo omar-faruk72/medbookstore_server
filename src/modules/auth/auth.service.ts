@@ -1,14 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from './schemas/user.schema';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) { }
 
+  // register api
   async register(
     createAuthDto: CreateAuthDto,
     clientIp: string,
@@ -25,7 +27,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
-      address: address ?? '', 
+      address: address ?? '',
       imageUrl: uploadedImageUrl ?? '',
       ipAddresses: [clientIp],
       provider: 'credentials',
@@ -42,6 +44,39 @@ export class AuthService {
         address: savedUser.address,
         imageUrl: savedUser.imageUrl,
         ipAddresses: savedUser.ipAddresses,
+      },
+    };
+  }
+
+  // login api
+  async login(loginAuthDto: LoginAuthDto) {
+    const { email, password } = loginAuthDto;
+
+    // ১. ইমেইল দিয়ে ইউজার খোঁজা
+    const user = await this.userModel.findOne({ email: email.toLowerCase().trim() });
+
+    // 🔒 যদি ইউজার না পাওয়া যায় অথবা ডাটাবেজে পাসওয়ার্ড না থাকে
+    if (!user || !user.password) {
+      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
+    }
+
+    // 🚀 টাইপস্ক্রিপ্ট সেফ পাসওয়ার্ড কম্পেয়ার (Error ফিক্সড)
+    const isPasswordMatched = await bcrypt.compare(password, user.password as string);
+
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
+    }
+
+    // ৩. লগইন সফল 
+    return {
+      success: true,
+      message: 'লগইন সফল হয়েছে!',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        // 👑 রোল যদি স্কিমাতে না-ও থাকে, আমরা টাইপ সেফটির জন্য ফলব্যাক রেখে দিচ্ছি
+        role: (user as any).role || 'user',
       },
     };
   }
