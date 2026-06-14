@@ -5,12 +5,16 @@ import {
   UseInterceptors,
   UploadedFile,
   Ip,
+  Get,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { AuthGuard } from './guards/auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -37,5 +41,13 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);
+  }
+
+  // get me api 
+  @Get('me')
+  @UseGuards(AuthGuard)
+  async getMe(@Req() req: any) {
+    const userId = req.user.id;
+    return this.authService.getMe(userId);
   }
 }

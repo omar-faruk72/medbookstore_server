@@ -5,10 +5,14 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from './schemas/user.schema';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { JwtService } from '@nestjs/jwt'; 
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) { }
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly jwtService: JwtService,
+  ) { }
 
   // register api
   async register(
@@ -19,7 +23,7 @@ export class AuthService {
     const { name, email, password, address } = createAuthDto;
     const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
-      throw new BadRequestException('এই ইমেইলটি দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা হয়েছে।');
+      throw new BadRequestException('এই ইমেইলটি দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা হয়েছে।');
     }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -36,7 +40,7 @@ export class AuthService {
     const savedUser = await newUser.save();
 
     return {
-      message: 'ইউজার রেজিস্ট্রেশন সফল হয়েছে!',
+      message: 'ইউজার রেজিস্ট্রেশন সফল হয়েছে!',
       user: {
         id: savedUser._id,
         name: savedUser.name,
@@ -51,33 +55,36 @@ export class AuthService {
   // login api
   async login(loginAuthDto: LoginAuthDto) {
     const { email, password } = loginAuthDto;
-
-    // ১. ইমেইল দিয়ে ইউজার খোঁজা
     const user = await this.userModel.findOne({ email: email.toLowerCase().trim() });
-
-    // 🔒 যদি ইউজার না পাওয়া যায় অথবা ডাটাবেজে পাসওয়ার্ড না থাকে
     if (!user || !user.password) {
-      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
+      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
     }
-
-    // 🚀 টাইপস্ক্রিপ্ট সেফ পাসওয়ার্ড কম্পেয়ার (Error ফিক্সড)
     const isPasswordMatched = await bcrypt.compare(password, user.password as string);
 
     if (!isPasswordMatched) {
-      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
+      throw new UnauthorizedException('ভুল ইমেইল অথবা পাসওয়ার্ড!');
     }
-
-    // ৩. লগইন সফল 
+    const payload = { id: user._id, email: user.email, role: user.role };
+    const token = this.jwtService.sign(payload);
     return {
       success: true,
-      message: 'লগইন সফল হয়েছে!',
+      message: 'লগইন সফল হয়েছে!',
+      accessToken: token, 
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        // 👑 রোল যদি স্কিমাতে না-ও থাকে, আমরা টাইপ সেফটির জন্য ফলব্যাক রেখে দিচ্ছি
-        role: (user as any).role || 'user',
+        role: user.role || 'user',
       },
     };
+  }
+
+  //  (For /auth/me)
+  async getMe(userId: string) {
+    const user = await this.userModel.findById(userId).select('-password'); 
+    if (!user) {
+      throw new UnauthorizedException('ইউজার পাওয়া যায়নি বা টোকেনটি অবৈধ!');
+    }
+    return user;
   }
 }
