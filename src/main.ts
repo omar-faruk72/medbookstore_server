@@ -11,6 +11,14 @@ async function bootstrap() {
 
   const config = getConfig();
   const port = config.port || 5000;
+
+  //  CORS 
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:3001'], 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, 
+  });
+
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(
     new ValidationPipe({
