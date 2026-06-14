@@ -5,7 +5,7 @@ function getConfig(): {
 } {
   return {
     database: {
-      uri: process.env.MONGO_URI,
+      uri: process.env.MONGODB_URI,
     },
     port: process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 3000,
     // JWT কনফিগ এখানে যোগ করুন
