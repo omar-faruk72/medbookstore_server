@@ -4,12 +4,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { connectDB } from './lib/dbConnect';
 import getConfig from './config/db.config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = getConfig();
   const port = config.port || 5000;
+  app.setGlobalPrefix('api/v1');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, 
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
   try {
     await connectDB();
   } catch (error) {
@@ -17,10 +27,10 @@ async function bootstrap() {
       '❌ সার্ভার চালু হওয়ার সময় মঙ্গোডিবি কানেকশনে বড় সমস্যা হয়েছে!',
     );
   }
+
   await app.listen(port);
   console.log('==================================================');
-  console.log(`🚀 MedBookStore Server is Running on: http://localhost:${port}`);
+  console.log(`🚀 MedBookStore Server is Running on: http://localhost:${port}/api/v1`);
   console.log('==================================================');
 }
-
-bootstrap();
+void bootstrap();
