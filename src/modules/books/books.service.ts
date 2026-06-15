@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Book, PublishStatus } from './schemas/book.schema';
 
 @Injectable()
 export class BooksService {
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+  constructor(
+    @InjectModel(Book.name) private readonly bookModel: Model<Book>,
+  ) {}
+
+  async create(bookData: any): Promise<Book> {
+    let featuresArray: string[] = [];
+    if (bookData.specialFeatures) {
+      try {
+        featuresArray = typeof bookData.specialFeatures === 'string' 
+          ? JSON.parse(bookData.specialFeatures) 
+          : bookData.specialFeatures;
+      } catch {
+        featuresArray = bookData.specialFeatures.split(',').map((f: string) => f.trim());
+      }
+    }
+
+    const newBook = new this.bookModel({
+      ...bookData,
+      price: Number(bookData.price),
+      specialFeatures: featuresArray,
+    });
+
+    return newBook.save();
   }
 
-  findAll() {
-    return `This action returns all books`;
+  async findActiveBooks(): Promise<Book[]> {
+    return this.bookModel
+      .find({ publishStatus: PublishStatus.ACTIVE })
+      .populate('category', 'name') 
+      .sort({ createdAt: -1 })
+      .exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
-  }
-
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async findAllBooksForAdmin(): Promise<Book[]> {
+    return this.bookModel.find().populate('category', 'name').sort({ createdAt: -1 }).exec();
   }
 }
