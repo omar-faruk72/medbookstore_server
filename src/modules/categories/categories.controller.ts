@@ -7,13 +7,13 @@ import { UserRole } from '../auth/schemas/user.schema';
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
-  @Post()
+  @Post('post')
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN) 
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
-  @Get()
+  @Get('get')
   async findAll() {
     return this.categoriesService.findAll();
   }
