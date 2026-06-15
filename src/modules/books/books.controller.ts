@@ -23,7 +23,7 @@ export class BooksController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @Post()
+  @Post('post')
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
   @UseInterceptors(
