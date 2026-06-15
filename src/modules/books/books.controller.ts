@@ -23,6 +23,7 @@ export class BooksController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  // post api
   @Post('post')
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
@@ -48,10 +49,12 @@ export class BooksController {
       samplePdf: samplePdfUrl,
     });
   }
+  // gel home page book
   @Get('active')
   async findActive() {
     return this.booksService.findActiveBooks();
   }
+  // gel admin page book
   @Get('admin/all')
   @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
