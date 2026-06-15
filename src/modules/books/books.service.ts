@@ -33,12 +33,11 @@ export class BooksService {
   async findActiveBooks(): Promise<Book[]> {
     return this.bookModel
       .find({ publishStatus: PublishStatus.ACTIVE })
-      .populate('category', 'name') 
       .sort({ createdAt: -1 })
       .exec();
   }
 
   async findAllBooksForAdmin(): Promise<Book[]> {
-    return this.bookModel.find().populate('category', 'name').sort({ createdAt: -1 }).exec();
+    return this.bookModel.find().sort({ createdAt: -1 }).exec();
   }
 }
