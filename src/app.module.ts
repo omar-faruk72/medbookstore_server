@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 import getConfig from './config/db.config';
 const config = getConfig();
 
@@ -10,6 +11,7 @@ const config = getConfig();
   imports: [
     MongooseModule.forRoot(config.database.uri || process.env.MONGO_URI || ''),
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
