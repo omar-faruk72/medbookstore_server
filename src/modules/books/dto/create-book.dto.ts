@@ -7,10 +7,9 @@ export class CreateBookDataDto {
   name: string;
 
   @IsNumberString({}, { message: 'বইয়ের দাম অবশ্যই একটি সংখ্যা হতে হবে!' })
-  price: string; 
-
+  price: string;
   @IsString()
-  @IsNotEmpty({ message: 'ক্যাটাগরি আইডি দেওয়া আবশ্যক!' })
+  @IsNotEmpty({ message: 'ক্যাটাগরির নাম দেওয়া আবশ্যক!' })
   category: string;
 
   @IsString()
