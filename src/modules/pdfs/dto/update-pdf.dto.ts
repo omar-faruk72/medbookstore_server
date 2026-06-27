@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreatePdfDto } from './create-pdf.dto';
+import { CreatePdfDataDto } from './create-pdf.dto'; 
 
-export class UpdatePdfDto extends PartialType(CreatePdfDto) {}
+export class UpdatePdfDto extends PartialType(CreatePdfDataDto) {}
