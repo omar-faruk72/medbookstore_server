@@ -2,7 +2,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { connectDB } from './lib/dbConnect';
 import getConfig from './config/db.config';
 import { ValidationPipe } from '@nestjs/common';
 
