@@ -6,6 +6,7 @@ export enum UserRole {
   ADMIN = 'admin',
   MANAGER = 'manager', 
 }
+
 @Schema({ timestamps: true })
 export class User extends Document {
   @Prop({ required: true, trim: true })
@@ -34,7 +35,7 @@ export class User extends Document {
     enum: UserRole,
     default: UserRole.USER,
   })
-  role: UserRole;
+  role!: UserRole;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
