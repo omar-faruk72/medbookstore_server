@@ -1,24 +1,24 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateAuthDto {
-  @IsNotEmpty({ message: 'নাম দেওয়া বাধ্যতামূলক' })
+  @IsNotEmpty({ message: 'নাম দেওয়া বাধ্যতামূলক' })
   @IsString({ message: 'নাম অবশ্যই স্ট্রিং হতে হবে' })
   name!: string;
 
-  @IsNotEmpty({ message: 'ইমেইল দেওয়া বাধ্যতামূলক' })
+  @IsNotEmpty({ message: 'ইমেইল দেওয়া বাধ্যতামূলক' })
   @IsEmail({}, { message: 'সঠিক ইমেইল অ্যাড্রেস দিন' })
   email!: string;
 
-  @IsNotEmpty({ message: 'পাসওয়ার্ড দেওয়া বাধ্যতামূলক' })
-  @MinLength(6, { message: 'পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে' })
-  @IsString({ message: 'পাসওয়ার্ড অবশ্যই স্ট্রিং হতে হবে' })
+  @IsNotEmpty({ message: 'পাসওয়ার্ড দেওয়া বাধ্যতামূলক' })
+  @MinLength(6, { message: 'পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে' })
+  @IsString({ message: 'পাসওয়ার্ড অবশ্যই স্ট্রিং হতে হবে' })
   password!: string;
 
-  @IsOptional() // 👈 ইউজার না দিলেও কোনো সমস্যা নেই
-  @IsString({ message: 'ইমেজ ইউআরএল স্ট্রিং হতে হবে' })
+  @IsOptional()
+  @IsString({ message: 'ইメージ ইউআরএল স্ট্রিং হতে হবে' })
   imageUrl?: string;
 
-  @IsOptional() // 👈 অ্যাড্রেসও এখন অপশনাল
+  @IsOptional()
   @IsString({ message: 'ঠিকানা অবশ্যই স্ট্রিং হতে হবে' })
   address?: string;
 }
