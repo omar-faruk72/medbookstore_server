@@ -21,6 +21,8 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "types": ["node", "multer"],
-    "ignoreDeprecations": "6.0" 
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   }
 }
